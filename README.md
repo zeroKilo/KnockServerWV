@@ -1,6 +1,6 @@
 # KnockServerWV
 
-Port-knocking server and client for windows
+Port-knocking server and client for windows. [What is port knocking?...](https://en.wikipedia.org/wiki/Port_knocking)
 
 <img width="802" height="482" alt="image" src="https://github.com/user-attachments/assets/cc109ba4-c00f-4d3e-a3a7-757b7e80a494" />
 
