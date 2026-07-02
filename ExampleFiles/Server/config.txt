@@ -1,0 +1,7 @@
+maxlogdisplay=1000
+usertimeout=60
+baseport=7000
+range=10
+length=10
+salt1=12
+salt2=34

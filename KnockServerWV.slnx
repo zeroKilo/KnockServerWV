@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Release" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="KnockClientWV/KnockClientWV.csproj" Id="bfbbdce0-eafe-4fe2-b523-403abf2a9220">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="KnockServerWV/KnockServerWV.csproj" Id="b81e752e-ed9f-4620-a247-872b09ddd012">
+    <Platform Project="x64" />
+  </Project>
+</Solution>
