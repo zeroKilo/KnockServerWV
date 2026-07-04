@@ -23,7 +23,8 @@ namespace KnockServerWV
             lock (_sync)
             {
                 LogEntry e = new LogEntry(s, display);
-                logEntries.Add(e);
+                if (display)
+                    logEntries.Add(e);
                 string t = e.time.ToShortDateString() + " " + e.time.ToLongTimeString() + " " + e.text + "\n";
                 byte[] buff = Encoding.UTF8.GetBytes(t);
                 fs.Write(buff, 0, buff.Length);
