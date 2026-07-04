@@ -275,16 +275,45 @@ namespace KnockServerWV
 
         private static unsafe void FilterCallback(void* context, FWPM_NET_EVENT5* e)
         {
-            Logger.Log("Received event type " + e->type + " flags " + e->header.flags.ToString("X8"), false);
-            if (CheckFlags(e->header.flags) &&
-                e->type == FWPM_NET_EVENT_TYPE.FWPM_NET_EVENT_TYPE_CLASSIFY_DROP &&
+            string ipVer = "";
+            if ((e->header.flags & (uint)FWPM_NET_EVENT_FLAG.IP_VERSION_SET) != 0)
+                ipVer = e->header.ipVersion == FWP_IP_VERSION.FWP_IP_VERSION_V4 ? " IPv4" : "IPv6";
+            Logger.Log("Received event type " + e->type + " flags " + e->header.flags.ToString("X8") + ipVer, false);
+            if (CheckFlags(e->header.flags))
+            {
+                if (e->type == FWPM_NET_EVENT_TYPE.FWPM_NET_EVENT_TYPE_CLASSIFY_DROP &&
                 e->header.ipVersion == FWP_IP_VERSION.FWP_IP_VERSION_V4 &&
                 e->header.localPort >= basePort &&
                 e->header.localPort < basePort + range)
-            {
-                lock (_sync)
                 {
-                    ip4knocks.Add(new uint[] { e->header.remoteAddrV4, e->header.localPort });
+                    lock (_sync)
+                    {
+                        ip4knocks.Add(new uint[] { e->header.remoteAddrV4, e->header.localPort });
+                    }
+                }
+                else
+                {
+                    switch (e->type)
+                    {
+                        case FWPM_NET_EVENT_TYPE.FWPM_NET_EVENT_TYPE_CLASSIFY_DROP:
+                            if (e->header.ipVersion == FWP_IP_VERSION.FWP_IP_VERSION_V4)
+                            {
+                                ushort localPort = e->header.localPort;
+                                ushort remotePort = e->header.remotePort;
+                                uint ip = e->header.remoteAddrV4;
+                                Logger.Log("From " + Ip4ToString(ip) + ":" + remotePort + " -> local port " + localPort, false);
+                            }
+                            break;
+                        case FWPM_NET_EVENT_TYPE.FWPM_NET_EVENT_TYPE_CAPABILITY_DROP:
+                            if (e->header.ipVersion == FWP_IP_VERSION.FWP_IP_VERSION_V4)
+                            {
+                                ushort localPort = e->header.localPort;
+                                ushort remotePort = e->header.remotePort;
+                                uint ip = e->header.remoteAddrV4;
+                                Logger.Log("From " + Ip4ToString(ip) + ":" + remotePort + " -> local port " + localPort, false);
+                            }
+                            break;
+                    }
                 }
             }
         }
