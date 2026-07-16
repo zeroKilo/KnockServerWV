@@ -151,7 +151,7 @@ namespace KnockServerWV
                     {
                         uint port = knock[1];
                         if (u.knocks.Count > 0 && u.knocks[u.knocks.Count - 1] == port)
-                            return;
+                            break;
                         Logger.Log("KNOCK from " + Ip4ToString(ip) + " to local port " + port);
                         u.knocks.Add(port);
                         while (u.knocks.Count > currentKnockSequence.Length)
@@ -209,8 +209,8 @@ namespace KnockServerWV
         }
 
         public static void UpdateIP4Knock(uint ip)
-        { 
-            lock(_sync)
+        {
+            lock (_sync)
             {
                 knockUpdates.Add(ip);
             }
@@ -324,7 +324,7 @@ namespace KnockServerWV
             {
                 string ips = String.Join(",", currentIPs.ToArray());
                 Logger.Log("Updating firewall rules with IPs: " + ips, false);
-                for(int i = 0; i < controlledRules.Count; i++)
+                for (int i = 0; i < controlledRules.Count; i++)
                 {
                     string rule = controlledRules[i];
                     Logger.Log("Updating firewall rule " + rule, false);
@@ -341,7 +341,7 @@ namespace KnockServerWV
                         controlledRules.RemoveAt(i);
                         i--;
                     }
-                    else
+                    else if (fwRule.RemoteAddresses != ips)
                         fwRule.RemoteAddresses = ips;
                 }
                 Logger.Log("Updated firewall rules");
